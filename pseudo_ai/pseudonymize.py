@@ -63,3 +63,16 @@ def pseudonymize(
         text = text[: entity["start"]] + pseudonym + text[entity["end"] :]
 
     return {"pseudonymized_text": text, "pseudonym_map": pseudonym_map}
+
+
+def reverse_pseudonymize(
+    pseudonymized_text: str, pseudonym_map: Dict[str, str]
+) -> str:
+    # Reverse the pseudonym_map to get the original terms
+    reverse_map = {v: k for k, v in pseudonym_map.items()}
+
+    # Replace pseudonyms in the text with the original terms
+    for pseudonym, original in reverse_map.items():
+        pseudonymized_text = pseudonymized_text.replace(pseudonym, original)
+
+    return pseudonymized_text
