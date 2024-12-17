@@ -1,7 +1,6 @@
 import numpy as np
 
 
-@staticmethod
 def merge_local_ner_results(local_results, original_text):
     """
     Merge NER results into grouped entities using the original text for accurate word reconstruction.

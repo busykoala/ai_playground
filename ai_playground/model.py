@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from PIL import Image
 from transformers import pipeline
 
-from pseudo_ai.merge_ner_results import merge_local_ner_results
+from ai_playground.merge_ner_results import merge_local_ner_results
 
 load_dotenv()
 
@@ -67,7 +67,8 @@ class Model:
 
         return call_api
 
-    def _prepare_payload(self, input_data):
+    @staticmethod
+    def _prepare_payload(input_data):
         if isinstance(input_data, Image.Image):
             img_format = input_data.format
             buffered = BytesIO()

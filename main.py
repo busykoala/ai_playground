@@ -3,10 +3,10 @@ from io import BytesIO
 import requests
 from PIL import Image
 
-from pseudo_ai.model import Model
+from ai_playground.model import Model
 
 
-def sentiment_analysis(text):
+def sentiment_analysis(input_text):
     model = "dbmdz/bert-large-cased-finetuned-conll03-english"
     task = "ner"
 
@@ -16,7 +16,7 @@ def sentiment_analysis(text):
         task,
         local=True,
     )
-    print(local_model.predict(text))
+    print(local_model.predict(input_text))
 
     print("\n--- Remote Pipeline Results (API) ---")
     remote_model = Model(
@@ -24,10 +24,10 @@ def sentiment_analysis(text):
         task,
         local=False,
     )
-    print(remote_model.predict(text))
+    print(remote_model.predict(input_text))
 
 
-def text_generation(text):
+def text_generation(input_text):
     model = "microsoft/phi-2"
     task = "text-generation"
 
@@ -39,7 +39,7 @@ def text_generation(text):
         temperature=0.5,
         do_sample=True,
     )
-    print(local_model.predict(text))
+    print(local_model.predict(input_text))
 
     print("\n--- Remote Pipeline Results (API) ---")
     remote_model = Model(
@@ -49,7 +49,7 @@ def text_generation(text):
         temperature=0.5,
         do_sample=True,
     )
-    print(remote_model.predict(text))
+    print(remote_model.predict(input_text))
 
 
 def image_to_text():

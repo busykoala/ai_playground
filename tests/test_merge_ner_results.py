@@ -3,7 +3,7 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 
-from pseudo_ai.merge_ner_results import merge_local_ner_results
+from ai_playground.merge_ner_results import merge_local_ner_results
 
 
 def round_scores(results, precision=4):
@@ -83,7 +83,6 @@ def original_text():
     return "The Swiss man has traveled to New York. There he met Anna Wintour."
 
 
-### Test merge_local_ner_results
 def test_merge_local_ner_results(ner_local_results, original_text):
     """Test merging of local NER results."""
     merged = merge_local_ner_results(ner_local_results, original_text)
