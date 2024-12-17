@@ -1,7 +1,10 @@
+import base64
 import os
+from io import BytesIO
 
 import requests
 from dotenv import load_dotenv
+from PIL import Image
 from transformers import pipeline
 
 from pseudo_ai.merge_ner_results import merge_local_ner_results
@@ -56,10 +59,20 @@ class Model:
             "Authorization": f"Bearer {os.getenv('HUGGINGFACEHUB_API_TOKEN')}"
         }
 
-        def call_api(text, **kwargs):
-            payload = {"inputs": text}
+        def call_api(input_data, **kwargs):
+            payload = self._prepare_payload(input_data)
             payload.update(kwargs)
             response = requests.post(api_url, headers=headers, json=payload)
             return response.json()
 
         return call_api
+
+    def _prepare_payload(self, input_data):
+        if isinstance(input_data, Image.Image):
+            img_format = input_data.format
+            buffered = BytesIO()
+            input_data.save(buffered, format=img_format)
+            img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            return {"inputs": img_str}
+        else:
+            return {"inputs": input_data}
