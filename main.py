@@ -1,28 +1,54 @@
-import pandas as pd
+from pseudo_ai.model import Model
 
-from pseudo_ai.pseudonymize import pseudonymize
-from pseudo_ai.pseudonymize import reverse_pseudonymize
+if __name__ == "__main__":
+    text = "The Swiss man has traveled to New York. There he met Anna Wintour."
 
-# Example sensitive data
-sensitive_data = pd.DataFrame(
-    {
-        "IBAN": ["DE89370400440532013000", None],
-        "CustomerNumber": ["CUS-12345678", "CUS-87654321"],
-    }
-)
+    # ----------------------------------------------
+    # Example 1: Sentiment Analysis
+    # ----------------------------------------------
 
-# Input text
-text = "John Doe lives in Berlin. His IBAN is DE89370400440532013000, and his customer number is CUS-12345678."
+    model = "dbmdz/bert-large-cased-finetuned-conll03-english"
+    task = "ner"
 
-# Pseudonymize
-result = pseudonymize(text, sensitive_data)
-pseudonymized_text = result["pseudonymized_text"]
-pseudonym_map = result["pseudonym_map"]
+    print("\n--- Local Pipeline Results (CPU) ---")
+    local_model = Model(
+        model,
+        task,
+        local=True,
+    )
+    print(local_model.predict(text))
 
-print("Pseudonymized Text:", pseudonymized_text)
-print("Pseudonym Map:", pseudonym_map)
+    print("\n--- Remote Pipeline Results (API) ---")
+    remote_model = Model(
+        model,
+        task,
+        local=False,
+    )
+    print(remote_model.predict(text))
 
-# Reverse pseudonymize
-original_text = reverse_pseudonymize(pseudonymized_text, pseudonym_map)
+    # ----------------------------------------------
+    # Example 2: Text Generation
+    # ----------------------------------------------
 
-print("Reversed Text:", original_text)
+    model = "microsoft/phi-2"
+    task = "text-generation"
+
+    print("\n--- Local Pipeline Results (CPU) ---")
+    local_model = Model(
+        model,
+        task,
+        local=True,
+        temperature=0.5,
+        do_sample=True,
+    )
+    print(local_model.predict(text))
+
+    print("\n--- Remote Pipeline Results (API) ---")
+    remote_model = Model(
+        model,
+        task,
+        local=False,
+        temperature=0.5,
+        do_sample=True,
+    )
+    print(remote_model.predict(text))
